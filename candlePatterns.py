@@ -1,4 +1,4 @@
-##
+#%%
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +8,7 @@ import talib as ta
 
 from tqdm import tqdm
 sns.set()
-##
+#%%
 def fwd_return(Px, L):
     fwd = Px.shift(-L)
     ret = 10000 * np.log(fwd / Px)
@@ -37,16 +37,14 @@ def ta_pattern_fit(hist, L, candle_pattern):
     summary['hit_ratio'] = summary['Npos'] / summary['count']
 
     return summary
-##
+#%%
 ticker = yf.Ticker("GBPUSD=X")
 hist = ticker.history(period="max")
-##
+#%%
 L = 5
 PATTERNS = ta.get_function_groups()['Pattern Recognition']
 
-candle_pattern = PATTERNS[-1]
-
-Px = hist['Close']
-summary = ta_pattern_fit(hist.loc[:'2020'],L,candle_pattern)
-
-display(summary[['mean','AW','AL','hit_ratio']])
+for patt in PATTERNS:
+    summary = ta_pattern_fit(hist.loc[:'2020'],L,patt)
+    display(summary[['mean','AW','AL','hit_ratio','count']])
+# %%
